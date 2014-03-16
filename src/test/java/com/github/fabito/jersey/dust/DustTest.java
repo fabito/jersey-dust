@@ -20,7 +20,7 @@ public class DustTest {
 	@Test
 	public void test() throws Throwable {
 		InputStream dustStream = DustTest.class.getResourceAsStream(DUST_FULL_2_3_4_MIN_JS);
-		DustEngine  dustEngine  = new DustEngine(dustStream);
+		RhinoDust  dustEngine  = new RhinoDust(dustStream);
 //		System.out.println(DustEngine.compileTemplate("hello_world", "Hello World!"));
 		
 		dustEngine.loadTemplate("hello_world", "Hello World!");

@@ -8,7 +8,7 @@ public class DustFactory {
 
 	public static Dust rhinoDust() {
 		InputStream dustStream = Dust.class.getResourceAsStream(DUST_FULL_2_3_4_MIN_JS);
-		return new DustEngine(dustStream);
+		return new RhinoDust(dustStream);
 	}
 
 }
