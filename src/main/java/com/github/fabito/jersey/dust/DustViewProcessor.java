@@ -36,19 +36,6 @@ public class DustViewProcessor implements ViewProcessor<DustTemplate> {
 	public DustViewProcessor(Dust dust) {
 		this.dust = dust;
 		logger.info(this.getClass().getSimpleName() + " installed.");
-//		String path = (String) resourceConfig.getProperties().get(
-//				"DUST_TEMPLATES_DEFAULT_PATH");
-//		
-//		logger.fine("Root path got from resourceConfig: " + path);
-//		
-//		if (path == null)
-//			this.basePath = "";
-//		else if (path.charAt(0) == '/') {
-//			this.basePath = path;
-//		} else {
-//			this.basePath = "/" + path;
-//		}
-		
 		logger.fine("BasePath after initialization: " + basePath);
 	}
 
@@ -56,14 +43,10 @@ public class DustViewProcessor implements ViewProcessor<DustTemplate> {
         logger.finer( "Resolving dust template path (" + path + ")" );
         String filePath = path.substring(path.lastIndexOf('.') + 1 );
         filePath = filePath.endsWith( "dust" ) ? filePath : filePath + ".dust";
-
-	     if (servletContext == null) {
-	    	 return null;
-	     }
-
+	     
 		try {
             final String fullPath = basePath + filePath;
-            InputStream resource = servletContext.getResourceAsStream(fullPath);
+            InputStream resource = resourceAsStream(fullPath);
 			if (resource != null) {
                 logger.finer( "[Template found at: " + fullPath + "]" );
                 return dustTemplate(resource, fullPath);
@@ -78,6 +61,12 @@ public class DustViewProcessor implements ViewProcessor<DustTemplate> {
 		}
 	}
 
+	private InputStream resourceAsStream(final String fullPath) {
+		return servletContext != null ? servletContext
+				.getResourceAsStream(fullPath) : getClass()
+				.getResourceAsStream(fullPath);
+	}
+
 	private DustTemplate dustTemplate(InputStream resource, String path) throws Exception {
 		DustTemplate dustTemplate = new DustTemplate(path, resource);
 		dust.loadSource(dustTemplate);
@@ -87,7 +76,6 @@ public class DustViewProcessor implements ViewProcessor<DustTemplate> {
 	@Override
 	public void writeTo(DustTemplate t, Viewable viewable, OutputStream out)
 			throws IOException {
-
         logger.finer( "Evaluating dust template (" + t.name() + ") with model of type " +
                    ( viewable.getModel() == null ? "null" : viewable.getModel().getClass().getSimpleName() ) );
 		// Commit the status and headers to the HttpServletResponse

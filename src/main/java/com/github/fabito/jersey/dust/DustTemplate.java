@@ -70,4 +70,12 @@ public class DustTemplate {
 		return sb.toString();
 	}
 
+	@Override
+	public String toString() {
+		return "DustTemplate [name=" + name + ", source=" + source
+				+ ", compiledSource=" + compiledSource + ", compiled="
+				+ compiled + "]";
+	}
+	
+
 }
