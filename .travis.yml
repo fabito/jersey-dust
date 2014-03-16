@@ -2,4 +2,4 @@
 before_script:
   - "wget http://services.gradle.org/distributions/gradle-1.11-all.zip"
   - "unzip gradle-1.11* > /dev/null"
-script: "gradle-1.11*/bin/gradle -q test"
+script: "gradle-1.11*/bin/gradle test"
