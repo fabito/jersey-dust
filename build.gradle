@@ -2,9 +2,21 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: "jacoco"
+apply plugin: 'coveralls'
 
 version =  '1.0-SNAPSHOT'
 group = 'com.github.fabito'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
+    }
+}
+
 	
 // tag::repositories[]
 def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
@@ -32,6 +44,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 // tag::dependencies[]
 dependencies {
+
 	compile "javax.servlet:servlet-api:2.5"		
     compile "com.sun.jersey:jersey-core:1.18.1"
     compile "com.sun.jersey:jersey-server:1.18.1"
@@ -63,5 +76,12 @@ uploadArchives {
             repository(url: "file://localhost/home/fabio/Development/eclipse-workspaces/oss/mvn-repo/releases")
             snapshotRepository(url: "file://localhost/home/fabio/Development/eclipse-workspaces/oss/mvn-repo/snapshots")
         }
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
     }
 }
