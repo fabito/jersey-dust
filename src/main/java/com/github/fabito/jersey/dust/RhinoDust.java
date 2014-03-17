@@ -11,14 +11,15 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Scriptable;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class RhinoDust implements Dust {
+/**
+ * Dust implementation
+ * @author fabio
+ * @see <a href="https://gist.github.com/vybs/1624130">Gist</a>
+ */
+public class RhinoDust extends AbstractDust {
 	
 	public final String MODULE = RhinoDust.class.getName();
 	private Scriptable globalScope;
-	private ObjectMapper mapper = new ObjectMapper();
-	
 
 	RhinoDust(InputStream dustStream) {
 		try {
@@ -38,7 +39,23 @@ public class RhinoDust implements Dust {
 		}
 	}
 
-	public String compileTemplate(String name, String rawSource) {
+	@Override
+	String doCompile(DustTemplate dustTemplate) throws Exception {
+		return compileTemplate(dustTemplate.name(), dustTemplate.template());
+	}
+
+	@Override
+	void doLoadSource(DustTemplate dustTemplate) throws Exception {
+		loadTemplate(dustTemplate.name(), dustTemplate.template());
+	}
+
+	@Override
+	void doRender(DustTemplate dustTemplate, Object contextObject,
+			Writer stringWriter) throws Exception {
+		render(dustTemplate.name(), mapper.writeValueAsString(contextObject), stringWriter);
+	}
+		
+	protected String compileTemplate(String name, String rawSource) {
 		Context dustContext = Context.enter();
 		try {
 			Scriptable compileScope = dustContext.newObject(globalScope);
@@ -59,7 +76,7 @@ public class RhinoDust implements Dust {
 		}
 	}
 
-	public void loadTemplate(String name, String rawSource) {
+	protected void loadTemplate(String name, String rawSource) {
 
 		Context dustContext = Context.enter();
 		try {
@@ -81,20 +98,18 @@ public class RhinoDust implements Dust {
 		}
 	}
 
-	public void render(String name, String json, Writer writer) {
+	protected void render(String name, String json, Writer writer) {
 		Context dustContext = Context.enter();
 
 		Scriptable renderScope = dustContext.newObject(globalScope);
 		renderScope.setParentScope(globalScope);
-
-		String renderScript = ("{   dust.render( name,  JSON.parse(json) , function( err, data) { if(err) { throw new Error(err);} else { writer.write( data );}  } );   }");
 
 		try {
 			renderScope.put("writer", renderScope, writer);
 			renderScope.put("json", renderScope, json);
 			renderScope.put("name", renderScope, name);
 
-			dustContext.evaluateString(renderScope, renderScript,
+			dustContext.evaluateString(renderScope, RENDER_SCRIPT,
 					"JDustCompiler", 0, null);
 
 		} catch (JavaScriptException e) {
@@ -104,23 +119,5 @@ public class RhinoDust implements Dust {
 			Context.exit();
 		}
 	}
-
-	@Override
-	public String compile(DustTemplate dustTemplate) throws Exception {
-		return compileTemplate(dustTemplate.name(), dustTemplate.template());
-	}
-
-	@Override
-	public void loadSource(DustTemplate dustTemplate) throws Exception {
-		loadTemplate(dustTemplate.name(), dustTemplate.template());
-	}
-
-	@Override
-	public void render(DustTemplate dustTemplate, Object contextObject,
-			Writer stringWriter) throws Exception {
-		render(dustTemplate.name(), mapper.writeValueAsString(contextObject), stringWriter);
-		
-	}
-
 
 }
