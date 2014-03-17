@@ -18,6 +18,7 @@ import org.mozilla.javascript.Scriptable;
  */
 class RhinoDust extends AbstractDust {
 	
+	private static final String DEFAULT_SOURCE_NAME = "JDustCompiler";
 	public final String MODULE = RhinoDust.class.getName();
 	private Scriptable globalScope;
 
@@ -30,6 +31,9 @@ class RhinoDust extends AbstractDust {
 				globalScope = dustEngineContext.initStandardObjects();
 				dustEngineContext.evaluateReader(globalScope, dustReader,
 						"dust-full.min.js", 0, null);
+				
+				
+				
 			} finally {
 				Context.exit();
 			}
@@ -65,7 +69,7 @@ class RhinoDust extends AbstractDust {
 
 			try {
 				return (String) dustContext.evaluateString(compileScope,
-						"(dust.compile(rawSource, name))", "JDustCompiler", 0,
+						"(dust.compile(rawSource, name))", DEFAULT_SOURCE_NAME, 0,
 						null);
 			} catch (JavaScriptException e) {
 				// Fail hard on any compile time error for dust templates
@@ -88,7 +92,7 @@ class RhinoDust extends AbstractDust {
 			try {
 				dustContext.evaluateString(compileScope,
 						"(dust.loadSource(dust.compile(rawSource, name)))",
-						"JDustCompiler", 0, null);
+						DEFAULT_SOURCE_NAME, 0, null);
 			} catch (JavaScriptException e) {
 				// Fail hard on any compile time error for dust templates
 				throw new RuntimeException(e);
@@ -110,7 +114,7 @@ class RhinoDust extends AbstractDust {
 			renderScope.put("name", renderScope, name);
 
 			dustContext.evaluateString(renderScope, RENDER_SCRIPT,
-					"JDustCompiler", 0, null);
+					DEFAULT_SOURCE_NAME, 0, null);
 
 		} catch (JavaScriptException e) {
 			// Fail hard on any render time error for dust templates

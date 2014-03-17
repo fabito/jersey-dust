@@ -20,4 +20,8 @@ public class DustFactory {
 		return new Jsr223Dust(inputStream());
 	}
 
+	public static Dust rhino2Dust() {
+		return new Rhino2Dust(inputStream());
+	}
+
 }

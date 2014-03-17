@@ -8,10 +8,9 @@ import java.io.InputStreamReader;
 
 public class DustTemplate {
 
-	String name;
-	String source;
-	String compiledSource;
-	Boolean compiled;
+	private String name;
+	private String source;
+	private String compiledSource;
 
 	public DustTemplate(String name, String source) {
 		super();
@@ -37,7 +36,6 @@ public class DustTemplate {
 
 	public void compiled(String compiled2) {
 		compiledSource = compiled2;
-
 	}
 
 	public boolean isCompiled() {
@@ -73,8 +71,7 @@ public class DustTemplate {
 	@Override
 	public String toString() {
 		return "DustTemplate [name=" + name + ", source=" + source
-				+ ", compiledSource=" + compiledSource + ", compiled="
-				+ compiled + "]";
+				+ ", compiledSource=" + compiledSource + "]";
 	}
 	
 

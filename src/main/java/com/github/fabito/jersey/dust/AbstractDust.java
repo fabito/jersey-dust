@@ -25,14 +25,20 @@ abstract class AbstractDust implements Dust {
 
 	@Override
 	public String compile(DustTemplate dustTemplate) throws Exception {
-		return doCompile(dustTemplate);
+		logger.fine("Compiling template: " + dustTemplate);
+		String compiled = doCompile(dustTemplate);
+		dustTemplate.compiled(compiled);
+		logger.fine("Compiled template: " + dustTemplate);
+		return compiled;
 	}
 
 	abstract String doCompile(DustTemplate dustTemplate) throws Exception;
 
 	@Override
 	public void loadSource(DustTemplate dustTemplate) throws Exception {
+		logger.fine("Registering template: ." + dustTemplate);
 		if (!dustTemplate.isCompiled()) {
+			logger.fine("Template not compiled yet.");
 			compile(dustTemplate);
 		}
 		doLoadSource(dustTemplate);
@@ -44,6 +50,11 @@ abstract class AbstractDust implements Dust {
 	@Override
 	public void render(DustTemplate dustTemplate, Object contextObject,
 			Writer stringWriter) throws Exception {
+		logger.fine("Rendering template: ." + dustTemplate);
+		if (!registeredTemplates.containsKey(dustTemplate.name())) {
+			logger.fine("Template not registered.");
+			loadSource(dustTemplate);
+		}
 		doRender(dustTemplate, contextObject, stringWriter);
 	}
 
