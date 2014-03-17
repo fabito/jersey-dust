@@ -30,13 +30,13 @@ public class Jsr223Dust implements Dust {
 	private Map<String, DustTemplate> registeredTemplates = new HashMap<>();
 	private ObjectMapper mapper = new ObjectMapper();
 
-	public Jsr223Dust(Reader reader) throws ScriptException {
+	Jsr223Dust(Reader reader) throws ScriptException {
 		engine = getJavaScriptEngine();
         engine.eval(reader);
         this.dust = engine.get("dust");
 	}
 	
-	public Jsr223Dust(InputStream dustStream) throws ScriptException {
+	Jsr223Dust(InputStream dustStream) throws ScriptException {
 		this(new InputStreamReader(dustStream));
 	}
 	

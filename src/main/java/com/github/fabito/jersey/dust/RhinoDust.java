@@ -20,7 +20,7 @@ public class RhinoDust implements Dust {
 	private ObjectMapper mapper = new ObjectMapper();
 	
 
-	public RhinoDust(InputStream dustStream) {
+	RhinoDust(InputStream dustStream) {
 		try {
 			Reader dustReader = new InputStreamReader(dustStream, "UTF-8");
 			Context dustEngineContext = Context.enter();
