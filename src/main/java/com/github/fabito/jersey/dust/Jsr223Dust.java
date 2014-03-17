@@ -13,7 +13,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-public class Jsr223Dust extends AbstractDust  {
+class Jsr223Dust extends AbstractDust  {
 
 	Object dust;
 	ScriptEngine engine;

@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class AbstractDust implements Dust {
+abstract class AbstractDust implements Dust {
 
 	protected static final String RENDER_SCRIPT = "{ dust.render( name, JSON.parse(json), function( err, data) { if(err) { throw new Error(err);} else { writer.write( data );}});}";
 

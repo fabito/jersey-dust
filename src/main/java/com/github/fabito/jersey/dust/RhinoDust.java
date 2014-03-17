@@ -16,7 +16,7 @@ import org.mozilla.javascript.Scriptable;
  * @author fabio
  * @see <a href="https://gist.github.com/vybs/1624130">Gist</a>
  */
-public class RhinoDust extends AbstractDust {
+class RhinoDust extends AbstractDust {
 	
 	public final String MODULE = RhinoDust.class.getName();
 	private Scriptable globalScope;
