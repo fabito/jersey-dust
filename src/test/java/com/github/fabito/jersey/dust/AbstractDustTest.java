@@ -3,7 +3,6 @@ package com.github.fabito.jersey.dust;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.InputStream;
 import java.io.StringWriter;
 
 import org.junit.Before;
@@ -11,40 +10,24 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-public class DustTest {
+public abstract class AbstractDustTest {
 
-	
-	private static final String DUST_FULL_2_3_4_MIN_JS = "/dust-full-2.3.4.min.js";
-	private Dust dust;
+	protected Dust dust;
 
-	@Test
-	public void test() throws Throwable {
-		InputStream dustStream = DustTest.class.getResourceAsStream(DUST_FULL_2_3_4_MIN_JS);
-		RhinoDust  dustEngine  = new RhinoDust(dustStream);
-//		System.out.println(DustEngine.compileTemplate("hello_world", "Hello World!"));
-		
-		dustEngine.loadTemplate("hello_world", "Hello World!");
-		dustEngine.loadTemplate("reference", "{?one}{one}{/one}");
-		
-		StringWriter writer = new StringWriter();
-		dustEngine.render("hello_world", "{}" , writer);
-		writer.close();
-		assertEquals("Hello World!", writer.toString());
-		
-		writer = new StringWriter();
-		dustEngine.render("reference", "{\"one\": 0 }" , writer);
-		writer.close();
-		assertEquals("0", writer.toString());
-	
-//		writer = new StringWriter();
-//		dustEngine.render("reference2222", "{\"one\": 0 }" , writer);
-		
+	public static class One {
+		Integer one = 0;
+		public Integer getOne() {
+			return one;
+		}
 	}
 
+	public AbstractDustTest() {
+		super();
+	}
+	
 	@Before
 	public void setup() throws Throwable {
-		InputStream dustStream = DustTest.class.getResourceAsStream(DUST_FULL_2_3_4_MIN_JS);
-		dust = new Jsr223Dust(dustStream);
+		dust = dust();
 	}
 	
 	@Test
@@ -90,12 +73,7 @@ public class DustTest {
 		writer.close();
 		assertEquals("2", writer.toString());
 	}
-	
-	public static class One {
-		Integer one = 0;
-		public Integer getOne() {
-			return one;
-		}
-	}
+
+	abstract Dust dust() throws Exception;
 
 }
